@@ -1,0 +1,1 @@
+A full-stack POS application with Java/Spring Boot backend and Angular frontend
