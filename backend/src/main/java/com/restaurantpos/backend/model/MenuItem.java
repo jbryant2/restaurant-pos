@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.marth.BigDecimal;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "menu_items")
