@@ -1,0 +1,106 @@
+<div class="table-management-container">
+  <div class="header">
+    <h1>Table Management</h1>
+    <button class="btn btn-primary" (click)="openAddForm()">+ Add Table</button>
+  </div>
+
+  <!-- Table List -->
+  <div class="tables-grid">
+    <div *ngFor="let table of tables" class="table-card">
+      <div class="table-header">
+        <h3>{{ table.tableNumber }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(table.status)">
+          {{ table.status }}
+        </span>
+      </div>
+      
+      <div class="table-details">
+        <p><strong>Capacity:</strong> {{ table.capacity }} people</p>
+        <p *ngIf="table.location"><strong>Location:</strong> {{ table.location }}</p>
+      </div>
+
+      <div class="table-actions">
+        <button class="btn btn-sm btn-secondary" (click)="openEditForm(table)">Edit</button>
+        <button class="btn btn-sm btn-danger" (click)="deleteTable(table)">Delete</button>
+      </div>
+
+      <div class="status-quick-actions">
+        <label>Quick Status:</label>
+        <select [value]="table.status" (change)="updateStatus(table, $any($event.target).value)">
+          <option *ngFor="let status of tableStatuses" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- No tables message -->
+  <div *ngIf="tables.length === 0" class="no-tables">
+    <p>No tables configured yet. Click "Add Table" to create your first table.</p>
+  </div>
+
+  <!-- Add/Edit Form Modal -->
+  <div class="modal-overlay" *ngIf="showAddForm" (click)="closeForm()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingTable ? 'Edit Table' : 'Add New Table' }}</h2>
+        <button class="close-btn" (click)="closeForm()">&times;</button>
+      </div>
+
+      <form (ngSubmit)="saveTable()">
+        <div class="form-group">
+          <label for="tableNumber">Table Number *</label>
+          <input 
+            type="text" 
+            id="tableNumber" 
+            [(ngModel)]="tableForm.tableNumber" 
+            name="tableNumber"
+            placeholder="e.g., Table 1"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="capacity">Capacity *</label>
+          <input 
+            type="number" 
+            id="capacity" 
+            [(ngModel)]="tableForm.capacity" 
+            name="capacity"
+            min="1"
+            max="20"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input 
+            type="text" 
+            id="location" 
+            [(ngModel)]="tableForm.location" 
+            name="location"
+            placeholder="e.g., Window, Patio, Main Dining"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" [(ngModel)]="tableForm.status" name="status">
+            <option *ngFor="let status of tableStatuses" [value]="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            {{ editingTable ? 'Update' : 'Create' }} Table
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
