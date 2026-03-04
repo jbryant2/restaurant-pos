@@ -1,0 +1,75 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="header-icon">restaurant</mat-icon>
+      <mat-card-title>Restaurant POS</mat-card-title>
+      <mat-card-subtitle>Sign in to continue</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-tab-group>
+        <!-- LOGIN TAB -->
+        <mat-tab label="Login">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="form-content">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput formControlName="username" autocomplete="username">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="current-password">
+              <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())">
+                <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+
+            @if (error()) {
+              <p class="error-msg">{{ error() }}</p>
+            }
+
+            <button mat-flat-button type="submit" [disabled]="loading() || loginForm.invalid" class="submit-btn">
+              {{ loading() ? 'Signing in...' : 'Sign In' }}
+            </button>
+          </form>
+        </mat-tab>
+
+        <!-- REGISTER TAB -->
+        <mat-tab label="Register">
+          <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="form-content">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <mat-icon matPrefix>person</mat-icon>
+              <input matInput formControlName="username" autocomplete="username">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <mat-icon matPrefix>lock</mat-icon>
+              <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" autocomplete="new-password">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Role</mat-label>
+              <mat-select formControlName="role">
+                <mat-option value="ADMIN">Admin</mat-option>
+                <mat-option value="MANAGER">Manager</mat-option>
+                <mat-option value="SERVER">Server</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            @if (error()) {
+              <p class="error-msg">{{ error() }}</p>
+            }
+
+            <button mat-flat-button type="submit" [disabled]="loading() || registerForm.invalid" class="submit-btn">
+              {{ loading() ? 'Creating account...' : 'Register' }}
+            </button>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

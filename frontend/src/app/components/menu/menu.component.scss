@@ -1,0 +1,24 @@
+.page { padding: 1.5rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.page-title { font-size: 1.5rem; font-weight: 600; margin: 0; }
+
+.form-card { margin-bottom: 1.5rem; }
+
+.item-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1rem;
+
+  mat-form-field { flex: 1; min-width: 160px; }
+  .full-width { flex: 100%; }
+  .form-actions { display: flex; align-items: center; justify-content: space-between; flex: 100%; }
+}
+
+.category-chips { margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.category-chips mat-chip { cursor: pointer; }
+.category-chips mat-chip.selected { background: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container); }
+
+.full-table { width: 100%; }
+.desc { font-size: 0.8rem; color: var(--mat-sys-on-surface-variant); }
+.cat-chip { font-size: 0.75rem; }

@@ -1,0 +1,63 @@
+.container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--mat-sys-primary);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  mat-icon { font-size: 28px; width: 28px; height: 28px; }
+}
+
+mat-nav-list { flex: 1; padding-top: 0.5rem; }
+
+.active-link {
+  background: var(--mat-sys-secondary-container) !important;
+  color: var(--mat-sys-on-secondary-container) !important;
+  border-radius: 0 50px 50px 0;
+
+  mat-icon { color: var(--mat-sys-on-secondary-container); }
+}
+
+.sidenav-footer {
+  padding: 0.5rem 0 0.5rem;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.role-label {
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.logout-btn {
+  width: 100%;
+  justify-content: flex-start;
+  padding-left: 1rem;
+  color: var(--mat-sys-error);
+}
+
+.content {
+  background: var(--mat-sys-surface-container-lowest);
+  overflow-y: auto;
+}

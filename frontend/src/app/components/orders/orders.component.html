@@ -1,0 +1,113 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Orders</h1>
+    <button mat-flat-button (click)="openNewOrder()">
+      <mat-icon>add</mat-icon> New Order
+    </button>
+  </div>
+
+  <!-- Status Filter -->
+  <mat-chip-set class="status-filter">
+    @for (s of filterStatuses; track s) {
+      <mat-chip (click)="selectedStatus.set(s)" [class.selected]="selectedStatus() === s" class="filter-chip status-{{ s.toLowerCase() }}">
+        {{ statusLabel(s) }}
+      </mat-chip>
+    }
+  </mat-chip-set>
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <!-- Orders Table -->
+  <mat-card>
+    <table mat-table [dataSource]="filteredOrders()" class="full-table">
+
+      <ng-container matColumnDef="table">
+        <th mat-header-cell *matHeaderCellDef>Table</th>
+        <td mat-cell *matCellDef="let order">
+          <strong>{{ order.table?.tableNumber ?? '—' }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let order">
+          <mat-chip class="status-chip status-{{ order.status.toLowerCase() }}">
+            {{ statusLabel(order.status) }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="items">
+        <th mat-header-cell *matHeaderCellDef>Items</th>
+        <td mat-cell *matCellDef="let order">
+          <button mat-button (click)="toggleExpand(order.id)" class="items-btn">
+            {{ order.items.length }} item{{ order.items.length !== 1 ? 's' : '' }}
+            <mat-icon>{{ expandedOrderId() === order.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let order">{{ order.totalAmount | currency }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef>Time</th>
+        <td mat-cell *matCellDef="let order" class="time-cell">{{ order.createdAt | date:'shortTime' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let order">
+          <div class="action-row">
+            @if (nextStatus(order.status); as next) {
+              <button mat-stroked-button (click)="updateStatus(order, next)" class="advance-btn">
+                {{ statusLabel(next) }}
+              </button>
+            }
+            @if (order.status === 'PENDING' || order.status === 'IN_PROGRESS') {
+              <button mat-icon-button color="warn" (click)="updateStatus(order, 'CANCELLED')">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            }
+            @if (order.status === 'COMPLETED' || order.status === 'CANCELLED') {
+              <button mat-icon-button color="warn" (click)="deleteOrder(order.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Expanded detail row -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let order" [attr.colspan]="displayedColumns.length">
+          @if (expandedOrderId() === order.id) {
+            <div class="expanded-detail">
+              @for (item of order.items; track item.id) {
+                <div class="order-item-row">
+                  <span>{{ item.menuItem?.name }}</span>
+                  <span class="item-qty">× {{ item.quantity }}</span>
+                  <span class="item-price">{{ item.unitPrice * item.quantity | currency }}</span>
+                  <button mat-icon-button color="warn" (click)="removeItem(order, item.id)" [disabled]="order.status === 'COMPLETED' || order.status === 'CANCELLED'">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                  </button>
+                </div>
+              }
+              @if (order.notes) {
+                <div class="order-notes">Note: {{ order.notes }}</div>
+              }
+            </div>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+    </table>
+  </mat-card>
+</div>

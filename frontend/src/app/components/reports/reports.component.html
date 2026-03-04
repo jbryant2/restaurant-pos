@@ -1,0 +1,108 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Sales Reports</h1>
+  </div>
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  @if (summary(); as s) {
+    <!-- Summary Cards -->
+    <div class="stat-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value primary">{{ s.totalRevenue | currency }}</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value">{{ s.totalOrders }}</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-label">Completed</div>
+          <div class="stat-value success">{{ s.completedOrders }}</div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-label">Completion Rate</div>
+          <div class="stat-value">{{ completionRate() | percent:'1.0-1' }}</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Top Selling Items -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>Top Selling Items</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table mat-table [dataSource]="topItems()" class="full-table">
+
+          <ng-container matColumnDef="rank">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let item; let i = index" class="rank-cell">{{ i + 1 }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Item</th>
+            <td mat-cell *matCellDef="let item"><strong>{{ item.itemName }}</strong></td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>Category</th>
+            <td mat-cell *matCellDef="let item" class="muted">{{ item.category }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Sold</th>
+            <td mat-cell *matCellDef="let item">{{ item.totalQuantity }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="revenue">
+            <th mat-header-cell *matHeaderCellDef>Revenue</th>
+            <td mat-cell *matCellDef="let item">{{ item.totalRevenue | currency }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="topColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: topColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Revenue Date Range -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>Revenue by Date Range</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="range-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput type="date" [(ngModel)]="startDate">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput type="date" [(ngModel)]="endDate">
+        </mat-form-field>
+        <button mat-flat-button (click)="queryRange()" [disabled]="!startDate || !endDate || rangeLoading()">
+          <mat-icon>search</mat-icon> Query
+        </button>
+      </div>
+      @if (rangeLoading()) {
+        <mat-progress-bar mode="indeterminate" />
+      }
+      @if (rangeRevenue() !== null) {
+        <div class="range-result">
+          Revenue: <strong>{{ rangeRevenue() | currency }}</strong>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,101 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Menu</h1>
+    <button mat-flat-button (click)="showForm() ? cancelForm() : showForm.set(true)">
+      <mat-icon>{{ showForm() ? 'close' : 'add' }}</mat-icon>
+      {{ showForm() ? 'Cancel' : 'Add Item' }}
+    </button>
+  </div>
+
+  <!-- Add / Edit Form -->
+  @if (showForm()) {
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editingId() ? 'Edit' : 'New' }} Menu Item</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="itemForm" (ngSubmit)="saveItem()" class="item-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <input matInput formControlName="category">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Price</mat-label>
+            <span matPrefix>$&nbsp;</span>
+            <input matInput type="number" step="0.01" formControlName="price">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="2"></textarea>
+          </mat-form-field>
+          <div class="form-actions">
+            <mat-slide-toggle formControlName="available">Available</mat-slide-toggle>
+            <button mat-flat-button type="submit" [disabled]="itemForm.invalid">
+              {{ editingId() ? 'Update' : 'Add Item' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Category Filter -->
+  <mat-chip-set class="category-chips">
+    @for (cat of categories(); track cat) {
+      <mat-chip (click)="selectedCategory.set(cat)" [class.selected]="selectedCategory() === cat">
+        {{ cat }}
+      </mat-chip>
+    }
+  </mat-chip-set>
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" />
+  }
+
+  <!-- Table -->
+  <mat-card>
+    <table mat-table [dataSource]="filteredItems()" class="full-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let item">
+          <strong>{{ item.name }}</strong>
+          @if (item.description) { <div class="desc">{{ item.description }}</div> }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Category</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-chip class="cat-chip">{{ item.category }}</mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let item">{{ item.price | currency }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="available">
+        <th mat-header-cell *matHeaderCellDef>Available</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-slide-toggle [checked]="item.available" (change)="toggleAvailable(item)" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button (click)="editItem(item)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteItem(item.id!)"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+</div>

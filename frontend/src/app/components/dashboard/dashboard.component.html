@@ -1,0 +1,79 @@
+<div class="page">
+  <h1 class="page-title">Dashboard</h1>
+
+  <!-- Stat Cards -->
+  <div class="stat-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon class="stat-icon tables">table_restaurant</mat-icon>
+        <div>
+          <div class="stat-value">{{ tables().length }}</div>
+          <div class="stat-label">Total Tables</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon class="stat-icon available">check_circle</mat-icon>
+        <div>
+          <div class="stat-value">{{ availableTables }}</div>
+          <div class="stat-label">Available</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon class="stat-icon orders">receipt_long</mat-icon>
+        <div>
+          <div class="stat-value">{{ activeOrders().length }}</div>
+          <div class="stat-label">Active Orders</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <mat-icon class="stat-icon revenue">attach_money</mat-icon>
+        <div>
+          <div class="stat-value">{{ totalRevenue() | currency }}</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Active Orders -->
+  <mat-card class="orders-card">
+    <mat-card-header>
+      <mat-card-title>Active Orders</mat-card-title>
+      <a mat-button routerLink="/orders">View All</a>
+    </mat-card-header>
+    <mat-card-content>
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate" />
+      } @else if (activeOrders().length === 0) {
+        <p class="empty-state">No active orders</p>
+      } @else {
+        <div class="order-list">
+          @for (order of activeOrders(); track order.id) {
+            <div class="order-row">
+              <div class="order-info">
+                <span class="order-table">{{ order.table.tableNumber }}</span>
+                <span class="order-items">{{ order.items.length }} item(s)</span>
+                <span class="order-time">{{ order.createdAt | date:'shortTime' }}</span>
+              </div>
+              <div class="order-right">
+                <mat-chip class="status-chip status-{{ order.status.toLowerCase() }}">
+                  {{ order.status | titlecase }}
+                </mat-chip>
+                <span class="order-total">{{ order.totalAmount | currency }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
