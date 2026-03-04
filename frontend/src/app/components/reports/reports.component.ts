@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,7 +15,7 @@ import { ReportsService, SalesSummary, TopSellingItem } from '../../services/rep
   selector: 'app-reports',
   standalone: true,
   imports: [
-    CurrencyPipe, DatePipe, PercentPipe, FormsModule,
+    CurrencyPipe, PercentPipe, FormsModule,
     MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
     MatCardModule, MatTableModule, MatProgressBarModule, MatDividerModule
   ],

@@ -34,7 +34,7 @@ export class InventoryComponent implements OnInit {
   menuItems = signal<MenuItem[]>([]);
   loading = signal(true);
   showAddForm = signal(false);
-  adjustments: Record<number, number> = {};
+  adjustments: Record<number, number | undefined> = {};
 
   // Add form fields
   newMenuItemId: number | null = null;
@@ -78,7 +78,7 @@ export class InventoryComponent implements OnInit {
 
   applyAdjustment(item: InventoryItem): void {
     const adj = this.adjustments[item.id] ?? 0;
-    if (adj === 0) return;
+    if (!adj) return;
     this.inventoryService.adjustStock(item.menuItem.id!, adj).subscribe({
       next: updated => {
         this.items.update(list => list.map(i => i.id === updated.id ? updated : i));

@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { TableService, RestaurantTable } from '../../services/table.service';
 import { OrderService, Order } from '../../services/order.service';
 import { ReportsService } from '../../services/reports.service';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +16,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
   imports: [
     MatCardModule, MatIconModule, MatChipsModule,
     MatProgressBarModule, MatDividerModule, RouterLink,
-    CurrencyPipe, DatePipe
+    CurrencyPipe, DatePipe, TitleCasePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
